@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Swagger
+namespace WpfTest
 {
     internal static class ExtensionCore
     {

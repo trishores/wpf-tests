@@ -1,59 +1,57 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Swagger
+namespace WpfTest
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static DragDropEffects _dragDropEffects = DragDropEffects.None;
-
         public MainWindow()
         {
             InitializeComponent();
-            File.WriteAllText(@"C:\Users\someone\Desktop\test.txt", "");
-        }
 
-        private void Grid_DragEnter(object sender, DragEventArgs e)
-        {
-            Grid.Background = Brushes.LightGreen;
-            _dragDropEffects = DragDropEffects.Copy;
-            File.AppendAllText(@"C:\Users\someone\Desktop\test.txt", "Grid_DragEnter\r\n");
-        }
+            FrameworkPropertyMetadata fpm1 = (FrameworkPropertyMetadata)AllowDropProperty.GetMetadata(typeof(Canvas));
+            Debug.WriteLine($"canvas1.AllowDropProperty inherits is {fpm1.Inherits}");
+            canvas1.AllowDrop = true;
+            Debug.WriteLine($"canvas1.AllowDrop set to {canvas1.AllowDrop}");
+            Debug.WriteLine($"panel1.AllowDrop: {panel1.AllowDrop}");
+            Debug.WriteLine($"label1.AllowDrop: {label1.AllowDrop}");
 
-        private void Grid_DragOver(object sender, DragEventArgs e)
-        {
-            e.Effects = _dragDropEffects;
-            e.Handled = true;
-        }
+            FrameworkPropertyMetadata fpm2 = (FrameworkPropertyMetadata)AllowDropProperty.GetMetadata(typeof(Canvas2));
+            Debug.WriteLine($"canvas2.AllowDropProperty inherits is {fpm2.Inherits}");
+            canvas2.AllowDrop = true;
+            Debug.WriteLine($"canvas2.AllowDrop set to {canvas2.AllowDrop}");
+            Debug.WriteLine($"panel2.AllowDrop: {panel2.AllowDrop}");
+            Debug.WriteLine($"label2.AllowDrop: {label2.AllowDrop}");
 
-        private void Grid_DragLeave(object sender, EventArgs e)
-        {
-            Grid.Background = Brushes.Beige;
-            File.AppendAllText(@"C:\Users\someone\Desktop\test.txt", "Grid_DragLeave\r\n");
-        }
+            /*
+            canvas1.AllowDropProperty inherits is True
+            canvas1.AllowDrop set to True
+            panel1.AllowDrop: True
+            label1.AllowDrop: True
 
-        private void Text_DragEnter(object sender, DragEventArgs e)
-        {
-            Text.Background = Brushes.LightGreen;
-            _dragDropEffects = DragDropEffects.Copy;
-            File.AppendAllText(@"C:\Users\someone\Desktop\test.txt", "Text_DragEnter\r\n");
+            canvas2.AllowDropProperty inherits is False
+            canvas2.AllowDrop set to True
+            panel2.AllowDrop: False
+            label2.AllowDrop: False
+            */
         }
+    }
 
-        private void Text_DragOver(object sender, DragEventArgs e)
+    public class Canvas2 : Canvas
+    {
+        static Canvas2()
         {
-            e.Effects = _dragDropEffects;
-            e.Handled = true;
-        }
+            FrameworkPropertyMetadata fpm = new();
+            fpm.Inherits = false;
 
-        private void Text_DragLeave(object sender, EventArgs e)
-        {
-            Text.Background = Brushes.White;
-            File.AppendAllText(@"C:\Users\someone\Desktop\test.txt", "Text_DragLeave\r\n");
+            AllowDropProperty.OverrideMetadata(typeof(Canvas2), fpm);
         }
     }
 }
